@@ -536,6 +536,118 @@
             .locations-section { padding: 3rem 1.5rem; }
             footer { padding: 1.5rem; flex-direction: column; text-align: center; }
         }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--warm-white);
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: fadeUp 0.3s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--mid);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .modal-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--mid);
+            margin-bottom: 2rem;
+        }
+
+        .modal .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .modal .form-group label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid);
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .modal .form-group input,
+        .modal .form-group textarea {
+            background: var(--cream);
+            border: 1px solid var(--light-border);
+            padding: 0.9rem 1rem;
+            color: var(--dark);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+            resize: none;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group textarea:focus {
+            border-color: var(--terracotta);
+        }
+
+        .modal .btn-submit {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .service-card {
+            cursor: pointer;
+        }
+
+        .service-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--terracotta);
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: 1px solid var(--terracotta);
+            padding-bottom: 0.1rem;
+            transition: opacity 0.2s;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .service-link:hover { opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -624,6 +736,7 @@
                 <div class="service-body">
                     <h3 class="service-name">Colloqui Individuali</h3>
                     <p class="service-desc">Percorsi psicologici per bambini, adolescenti e adulti. Con un'attenzione particolare all'infanzia come chiave di lettura del presente.</p>
+                    <br><a onclick="openModal('Colloqui Individuali')" class="service-link">Richiedi informazioni →</a>
                 </div>
             </div>
             <div class="service-card">
@@ -631,6 +744,7 @@
                 <div class="service-body">
                     <h3 class="service-name">Terapia di Coppia</h3>
                     <p class="service-desc">Uno spazio per comprendere le dinamiche relazionali, i pattern che si ripetono e le radici di ciò che non funziona nella coppia.</p>
+                    <br><a onclick="openModal('Terapia di Coppia')" class="service-link">Richiedi informazioni →</a>
                 </div>
             </div>
             <div class="service-card">
@@ -638,6 +752,7 @@
                 <div class="service-body">
                     <h3 class="service-name">Consulenza Genitoriale</h3>
                     <p class="service-desc">Supporto ai genitori per comprendere e accompagnare lo sviluppo emotivo dei propri figli, nelle diverse fasi della crescita.</p>
+                    <br><a onclick="openModal('Consulenza Genitoriale')" class="service-link">Richiedi informazioni →</a>
                 </div>
             </div>
         </div>
@@ -704,7 +819,7 @@
                     <p class="contact-value"><a href="https://www.instagram.com/studio.ludovicodelledonne" target="_blank">@studio.ludovicodelledonne</a></p>
                 </div>
             </div>
-            <form class="contact-form" onsubmit="handleSubmit(event)">
+            <form class="contact-form" action="https://formspree.io/f/mbdqpega" method="POST">
                 <div class="form-group">
                     <label>Nome</label>
                     <input type="text" placeholder="Il tuo nome" required>
@@ -728,6 +843,25 @@
     </footer>
 
     <script>
+
+        function openModal(servizio) {
+            document.getElementById('modalTitle').textContent = servizio;
+            document.getElementById('modalServizio').value = servizio;
+            document.getElementById('modalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOutside(event) {
+            if (event.target === document.getElementById('modalOverlay')) {
+                closeModal();
+            }
+        }
+
         function toggleMenu() {
             document.getElementById('mobileMenu').classList.toggle('open');
         }
@@ -752,6 +886,32 @@
             }, 3000);
         }
     </script>
+
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h3 class="modal-title" id="modalTitle">Richiedi informazioni</h3>
+            <p class="modal-subtitle">Ti risponderò il prima possibile.</p>
+            <form action="https://formspree.io/f/mbdqpega" method="POST">
+                <input type="hidden" name="servizio" id="modalServizio">
+                <div class="form-group">
+                    <label>Nome e Cognome</label>
+                    <input type="text" name="nome" placeholder="Il tuo nome e cognome" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="La tua email" required>
+                </div>
+                <div class="form-group">
+                    <label>Motivo della richiesta</label>
+                    <textarea name="motivo" rows="4" placeholder="Raccontami brevemente..." required></textarea>
+                </div>
+                <button type="submit" class="btn-primary modal-btn" style="width:100%; text-align:center; margin-top:0.5rem;">Invia richiesta</button>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>
