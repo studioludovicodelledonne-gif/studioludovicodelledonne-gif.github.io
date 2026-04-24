@@ -533,6 +533,13 @@
             .hero-bg-image { width: 100%; opacity: 0.15; }
             .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
             .services-grid { grid-template-columns: 1fr; }
+            .tab-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .tab-content { padding: 1.5rem; }
+            .detail-header { padding: 1.5rem; }
+            .detail-intro { padding: 1.5rem 1.5rem 0; }
+            .tabs { padding: 0 1.5rem; overflow-x: auto; }
+            .tab-image { height: 220px; }
+
             .locations-section { padding: 3rem 1.5rem; }
             footer { padding: 1.5rem; flex-direction: column; text-align: center; }
         }
@@ -648,6 +655,163 @@
         }
 
         .service-link:hover { opacity: 0.7; }
+
+        /* SERVICE DETAIL PANELS */
+        .service-card { cursor: pointer; }
+
+        .service-detail {
+            display: none;
+            margin-top: 2rem;
+            border: 1px solid var(--light-border);
+            background: var(--cream);
+            animation: slideDown 0.4s ease;
+        }
+
+        .service-detail.open { display: block; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2.5rem;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .detail-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--dark);
+        }
+
+        .detail-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--mid);
+            line-height: 1;
+            transition: color 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .detail-close:hover { color: var(--terracotta); }
+
+        .detail-intro {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--mid);
+            padding: 1.5rem 2.5rem 0;
+        }
+
+        /* TABS inside detail */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-border);
+            padding: 0 2.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            color: var(--mid);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0;
+            width: 100%; height: 2px;
+            background: var(--terracotta);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .tab-btn.active { color: var(--dark); }
+        .tab-btn.active::after { transform: scaleX(1); }
+        .tab-btn:hover { color: var(--dark); }
+
+        .tab-content { display: none; padding: 2.5rem; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .tab-image {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+        }
+
+        .tab-text h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--dark);
+            margin-bottom: 1.2rem;
+        }
+
+        .tab-text p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--dark-mid);
+            margin-bottom: 1rem;
+        }
+
+        .tab-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--light-border);
+            font-size: 0.85rem;
+            color: var(--mid);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+        }
+
+        .cta-btn {
+            padding: 0.9rem 2rem;
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .cta-btn:hover { background: var(--terracotta-light); }
+
     </style>
 </head>
 <body>
@@ -730,33 +894,157 @@
             <div class="divider"></div>
             <p>Ogni percorso è costruito sulla storia specifica di chi ho davanti. Il punto di partenza è sempre l'ascolto.</p>
         </div>
+
+        <!-- CARDS -->
         <div class="services-grid fade-in">
-            <div class="service-card">
+            <div class="service-card" onclick="openService('colloqui')">
                 <img class="service-image" src="https://images.unsplash.com/photo-1765447041709-9f1efbc81606?w=600&q=80" alt="Colloqui individuali">
                 <div class="service-body">
                     <h3 class="service-name">Colloqui Individuali</h3>
-                    <p class="service-desc">Percorsi psicologici per bambini, adolescenti e adulti. Con un'attenzione particolare all'infanzia come chiave di lettura del presente.</p>
-                    <br><a onclick="openModal('Colloqui Individuali')" class="service-link">Richiedi informazioni →</a>
+                    <p class="service-desc">Percorsi psicologici per bambini, adolescenti e adulti.</p>
+                    <span class="service-link">Scopri di più →</span>
                 </div>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="openService('coppia')">
                 <img class="service-image" src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=600&q=80" alt="Terapia di coppia">
                 <div class="service-body">
                     <h3 class="service-name">Terapia di Coppia</h3>
-                    <p class="service-desc">Uno spazio per comprendere le dinamiche relazionali, i pattern che si ripetono e le radici di ciò che non funziona nella coppia.</p>
-                    <br><a onclick="openModal('Terapia di Coppia')" class="service-link">Richiedi informazioni →</a>
+                    <p class="service-desc">Uno spazio per comprendere le dinamiche relazionali e i pattern che si ripetono.</p>
+                    <span class="service-link">Scopri di più →</span>
                 </div>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="openService('genitoriale')">
                 <img class="service-image" src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=600&q=80" alt="Consulenza genitoriale">
                 <div class="service-body">
                     <h3 class="service-name">Consulenza Genitoriale</h3>
-                    <p class="service-desc">Supporto ai genitori per comprendere e accompagnare lo sviluppo emotivo dei propri figli, nelle diverse fasi della crescita.</p>
-                    <br><a onclick="openModal('Consulenza Genitoriale')" class="service-link">Richiedi informazioni →</a>
+                    <p class="service-desc">Supporto ai genitori per comprendere e accompagnare lo sviluppo emotivo dei propri figli.</p>
+                    <span class="service-link">Scopri di più →</span>
                 </div>
             </div>
         </div>
+
+        <!-- DETAIL PANELS -->
+        <div class="service-detail" id="detail-colloqui">
+            <div class="detail-header">
+                <h3 class="detail-title">Colloqui Individuali</h3>
+                <button class="detail-close" onclick="closeService()">×</button>
+            </div>
+            <p class="detail-intro">"Uno spazio riservato per fermarsi e guardare cosa sta succedendo — dentro di sé e nelle relazioni con gli altri."</p>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('bambini', this)">Bambini</button>
+                <button class="tab-btn" onclick="switchTab('adolescenti', this)">Adolescenti</button>
+                <button class="tab-btn" onclick="switchTab('adulti', this)">Adulti</button>
+            </div>
+
+            <div class="tab-content active" id="tab-bambini">
+                <div class="tab-grid">
+                    <img class="tab-image" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80" alt="Bambini">
+                    <div class="tab-text">
+                        <h4>Il mondo del bambino</h4>
+                        <p>I bambini non sempre trovano le parole per dire quello che sentono. Ma lo mostrano — nel gioco, nel disegno, nel modo in cui si muovono nello spazio e nelle relazioni.</p>
+                        <p>Con i bambini lavoro attraverso il gioco e la narrazione, creando uno spazio sicuro in cui possano esprimersi liberamente. Il lavoro include sempre un confronto costante con i genitori, perché il bambino non può essere separato dal contesto in cui cresce.</p>
+                        <p>Mi occupo di difficoltà relazionali, emotivi e comportamentali, disturbi dell'apprendimento, elaborazione di traumi precoci e situazioni di disagio familiare.</p>
+                        <div class="tab-tags">
+                            <span class="tag">0-6 anni</span>
+                            <span class="tag">6-11 anni</span>
+                            <span class="tag">Gioco terapeutico</span>
+                            <span class="tag">Supporto genitoriale</span>
+                        </div>
+                        <button class="cta-btn" onclick="openModal('Colloqui Individuali — Bambini')">Richiedi informazioni</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-adolescenti">
+                <div class="tab-grid">
+                    <img class="tab-image" src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80" alt="Adolescenti">
+                    <div class="tab-text">
+                        <h4>Lo spazio dell'adolescente</h4>
+                        <p>L'adolescenza è il momento in cui si inizia a costruire una propria identità — spesso in conflitto con quella che gli altri si aspettano. È un periodo intenso, a volte caotico, che merita uno spazio neutro e privo di giudizi.</p>
+                        <p>Con gli adolescenti creo un luogo lontano dalla pressione familiare e scolastica — uno spazio dove poter essere sé stessi senza dover spiegare troppo.</p>
+                        <p>Mi occupo di difficoltà identitarie, relazioni con i pari, gestione delle emozioni, e situazioni di disagio scolastico o familiare.</p>
+                        <div class="tab-tags">
+                            <span class="tag">12-18 anni</span>
+                            <span class="tag">Identità</span>
+                            <span class="tag">Relazioni</span>
+                            <span class="tag">Disagio scolastico</span>
+                        </div>
+                        <button class="cta-btn" onclick="openModal('Colloqui Individuali — Adolescenti')">Richiedi informazioni</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-adulti">
+                <div class="tab-grid">
+                    <img class="tab-image" src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Adulti">
+                    <div class="tab-text">
+                        <h4>Il percorso dell'adulto</h4>
+                        <p>A volte ci si ritrova a ripetere gli stessi schemi — nelle relazioni, nel lavoro, nelle reazioni. A volte qualcosa si rompe e non si sa da dove cominciare a ricostruire.</p>
+                        <p>Con gli adulti esploro il presente attraverso il passato — non per restare fermi lì, ma per capire cosa si ripete e perché. L'infanzia non è un capitolo chiuso: è uno sfondo sempre presente che continua a orientare le scelte, spesso senza che ce ne accorgiamo.</p>
+                        <p>Mi occupo di difficoltà relazionali, stati d'ansia e umore, elaborazione di eventi traumatici, e percorsi di crescita personale.</p>
+                        <div class="tab-tags">
+                            <span class="tag">Adulti</span>
+                            <span class="tag">Ansia e umore</span>
+                            <span class="tag">Relazioni</span>
+                            <span class="tag">Crescita personale</span>
+                        </div>
+                        <button class="cta-btn" onclick="openModal('Colloqui Individuali — Adulti')">Richiedi informazioni</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-detail" id="detail-coppia">
+            <div class="detail-header">
+                <h3 class="detail-title">Terapia di Coppia</h3>
+                <button class="detail-close" onclick="closeService()">×</button>
+            </div>
+            <p class="detail-intro">"Uno spazio neutro in cui entrambi i partner possono essere ascoltati, senza giudizi."</p>
+            <div class="tab-grid">
+                <img class="tab-image" src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=800&q=80" alt="Terapia di coppia">
+                <div class="tab-text">
+                    <h4>Quando la coppia si inceppa</h4>
+                    <p>Ogni coppia porta con sé due storie, due modi di amare, due sistemi di aspettative costruiti nel tempo. Quando queste storie smettono di dialogare, emerge il conflitto — non come segnale di fallimento, ma come richiesta di cambiamento.</p>
+                    <p>La terapia di coppia è uno spazio neutro in cui entrambi i partner possono essere ascoltati senza che nessuno venga giudicato. L'obiettivo non è sempre "salvare" la coppia, ma capire cosa sta succedendo e scegliere consapevolmente come procedere.</p>
+                    <p>Lavoro sui pattern relazionali ripetuti, sulla comunicazione, sulla gestione del conflitto, e sulle radici individuali che ciascuno porta nella relazione.</p>
+                    <div class="tab-tags">
+                        <span class="tag">Comunicazione</span>
+                        <span class="tag">Conflitto</span>
+                        <span class="tag">Crisi di coppia</span>
+                        <span class="tag">Pattern relazionali</span>
+                    </div>
+                    <button class="cta-btn" onclick="openModal('Terapia di Coppia')">Richiedi informazioni</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-detail" id="detail-genitoriale">
+            <div class="detail-header">
+                <h3 class="detail-title">Consulenza Genitoriale</h3>
+                <button class="detail-close" onclick="closeService()">×</button>
+            </div>
+            <p class="detail-intro">"Capire meglio il proprio figlio — e il proprio modo di stare in relazione con lui."</p>
+            <div class="tab-grid">
+                <img class="tab-image" src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80" alt="Consulenza genitoriale">
+                <div class="tab-text">
+                    <h4>Essere genitori oggi</h4>
+                    <p>Essere genitori è uno dei compiti più complessi e trasformativi che esistano. Non perché si facciano necessariamente le cose sbagliate, ma perché ogni bambino è diverso, ogni fase porta nuove sfide, e spesso mancano gli strumenti per leggere quello che sta succedendo.</p>
+                    <p>La consulenza genitoriale è uno spazio di riflessione per i genitori — non per essere giudicati, ma per capire meglio il proprio figlio e il proprio modo di stare in relazione con lui.</p>
+                    <p>Mi occupo di difficoltà nella gestione delle emozioni del bambino, conflitti familiari, transizioni importanti come separazioni o nascite, e situazioni in cui il figlio mostra segnali di disagio.</p>
+                    <div class="tab-tags">
+                        <span class="tag">Sviluppo del bambino</span>
+                        <span class="tag">Gestione emotiva</span>
+                        <span class="tag">Dinamiche familiari</span>
+                        <span class="tag">Separazioni</span>
+                    </div>
+                    <button class="cta-btn" onclick="openModal('Consulenza Genitoriale')">Richiedi informazioni</button>
+                </div>
+            </div>
+        </div>
+
     </section>
+
 <section id="contenuti">
         <div class="contenuti-inner fade-in">
             <p class="section-label">Contenuti</p>
@@ -781,7 +1069,7 @@
     </section>
 
         <div class="locations-section fade-in">
-        <p class="locations-title">Dove mi trovo</p>
+        <p class="locations-title">Dove ci troviamo</p>
         <div class="locations">
             <div class="location-item">
                 <p class="location-label">Lecce</p>
@@ -860,6 +1148,29 @@
             if (event.target === document.getElementById('modalOverlay')) {
                 closeModal();
             }
+        }
+
+
+        function openService(id) {
+            // Close all panels first
+            document.querySelectorAll('.service-detail').forEach(d => d.classList.remove('open'));
+            const detail = document.getElementById('detail-' + id);
+            detail.classList.add('open');
+            setTimeout(() => {
+                detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function closeService() {
+            document.querySelectorAll('.service-detail').forEach(d => d.classList.remove('open'));
+        }
+
+        function switchTab(tab, btn) {
+            const panel = btn.closest('.service-detail');
+            panel.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            panel.querySelector('#tab-' + tab).classList.add('active');
+            btn.classList.add('active');
         }
 
         function toggleMenu() {
